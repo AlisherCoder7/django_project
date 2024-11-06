@@ -40,3 +40,18 @@ class OrderProduct(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
     order = models.ForeignKey(Order, null=True, on_delete=models.SET_NULL)
+
+
+class Cart(models.Model):
+    customer = models.OneToOneField(Customer, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.customer.first_name}'s Cart"
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.quantity} x {self.product.title} in {self.cart}"
